@@ -1,33 +1,46 @@
-1. Update Environment
+name: ubunturdp
+on: 
+  workflow_dispatch:
+   inputs:
+     auth:
+        description: 'GRDP Authorization Code'
+        required: true
+        default: 'paste your code here'
+  
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Update Environment
+      run: | sudo apt-get update && sudo apt-get upgrade
 
-$ sudo apt-get update
-$ sudo apt-get upgrade
+    - name:  Install XRDP
 
-2. Install XRDP
+run: sudo apt install xrdp
 
-$ sudo apt install xrdp
+- name: Check status of XRDP: ( XRDP runs automatically after installation)
 
-3. Check status of XRDP: ( XRDP runs automatically after installation)
-
-$ sudo systemctl status xrdp
+run: sudo systemctl status xrdp
 
 
-4. add the xrdp user to the ssl-cert group
+- name: add the xrdp user to the ssl-cert group
 
-$ sudo adduser xrdp ssl-cert  
+run: sudo adduser xrdp ssl-cert  
 
-5. Restart xrdp service:
+- name: Restart xrdp service:
 
-$ sudo systemctl restart xrdp
+run: sudo systemctl restart xrdp
 
-6. Configuring Firewall
+- name: Configuring Firewall
 Xrdp daemon listens on port 3389. You must open the Xrdp port if your Ubuntu server is protected by a firewall.
 
-$ sudo ufw allow from 192.168.33.0/24 to any port 3389
+run: sudo ufw allow from 192.168.33.0/24 to any port 3389
 
-here, replace given with with your computer ip. (check by $ ip a )
 
-$ sudo ufw allow 3389
+run: sudo ufw allow 3389
 
 --------------------------------
 Connecting to the Xrdp Server
@@ -59,28 +72,28 @@ To start an X session, Xrdp uses the startwm.sh file. Edit this file if you want
 -----------------------------------------
 IMPORTANT: Multi User Setup Configuration
 -----------------------------------------
-1. Install D-BUS
+- name: Install D-BUS
 
-$ sudo apt-get update
-$ sudo apt-get upgrade
-$ sudo apt-get install dbus-x11
+run: sudo apt-get update
+run: sudo apt-get upgrade 
+run: sudo apt-get install dbus-x11
 
 
 2. modify your /etc/xrdp/startwm.sh file
 
-$ sudo nano /etc/xrdp/startwm.sh
+run: sudo nano /etc/xrdp/startwm.sh
 
 At the below line before this line test -x /etc/X11/Xsession && exec /etc/X11/Xsession.
 
 ADD THESE LINES
 
-export $(dbus-launch)
+run: export $(dbus-launch)
 
 Then save the file.
 
 3. Restart the System: 
 
-$ sudo reboot
+run: sudo reboot
 
 
 
